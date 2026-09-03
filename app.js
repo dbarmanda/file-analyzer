@@ -19,5 +19,11 @@ const fs = require("fs");
 const directory = process.argv[2];
 console.log("Directory:", directory);
 
-const files = fs.readdirSync(directory);
-console.log("Files:", files);
+
+try {
+    const files = fs.readdirSync(directory);
+    console.log("Files:", files);
+} catch (error) {
+    console.log("Unable to read directory.");
+    console.log(error.message);
+}
