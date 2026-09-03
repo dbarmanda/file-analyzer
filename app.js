@@ -94,7 +94,15 @@ fs.readdir(directory, (error, files)=>{
         try {
             const contents = await Promise.all(promises);
             console.log("All files have been read.");
-            console.log(contents);
+            //console.log(contents);
+            contents.forEach((content, index) => {
+                const lines = content.trim().split("\n");
+                const words = content.trim().split(/\s+/);
+
+                console.log(`File ${index + 1}:`);
+                console.log("Lines:", lines.length);
+                console.log("Words:", words.length);
+            });
         } catch (error) {
             console.log("Unable to read files");
             console.log(error.message);
