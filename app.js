@@ -30,6 +30,20 @@ const fs = require("fs");
 const directory = process.argv[2];
 console.log("Directory:", directory);
 
+//doesn't directly return the file contents.
+//returns promise:
+function readFile(filePath){
+    return new Promise((resolve, reject) => {
+        fs.readFile(filePath, "utf8", (error, data) => {
+            if(error){
+                reject(error);
+                return;
+            }
+            resolve(data);
+        });
+    });
+}
+
 fs.readdir(directory, (error, files)=>{
     if(error){
         console.log("Unable to read directory.");
@@ -37,5 +51,42 @@ fs.readdir(directory, (error, files)=>{
         return;
     }
     console.log("Files:", files);
+
+    // //starts multiple async operations, but we currently have no wawy to know when all of them have finished
+    // //comes Promises and Promise.all().
+    // files.forEach((file)=>{
+    //     const filePath = `${directory}/${file}`;
+
+    //     fs.readFile(filePath, "utf8", (error, data)=>{
+    //         if(error){
+    //             console.log("Unable to read file.");
+    //             console.log(error.message);
+    //             return;
+    //         }
+    //         console.log(`\n--- ${file} ---`);
+    //         console.log(data);
+    //     });
+    // //this forEach means-->    
+    // //start read file 1
+    // // start read file 2
+    // // finish forEach
+    // // ...
+    // // callbacks execute when their reads finish   => thus need promises.
+    // });
+
+    const promises = files.map((file) => {
+        const filePath = `${directory}/${file}`;
+        return readFile(filePath);
+    });
+
+    Promise.all(promises)
+        .then((contents) => {
+            console.log("All files have been read.");
+            console.log(contents);
+        })
+        .catch((error) => {
+            console.log("Unable to read files.");
+            console.log(error.message);
+        });
 });
 console.log("File analyzer ends.");
