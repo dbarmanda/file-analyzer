@@ -132,6 +132,13 @@ fs.readdir(directory, (error, files)=>{
             console.log("Lines:", totalLines);
             console.log("Words:", totlaWords);
             console.log("Characters:", totalCharacters);
+
+            const largestFile = results.reduce((largest, result) => {
+                return result.characters > largest.characters ? result: largest;
+            });
+            console.log("\nLargest file:");
+            console.log("File:", largestFile.file);
+            console.log("Characters:", largestFile.characters);
         } catch (error) {
             console.log("Unable to read files");
             console.log(error.message);
