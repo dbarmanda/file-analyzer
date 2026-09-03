@@ -14,16 +14,28 @@ console.log("File analyzer started.");
 //   './test-files'
 // ]
 
+
+//2. Sync fs read:
+// try {
+//     const files = fs.readdirSync(directory);
+//     console.log("Files:", files);
+// } catch (error) {
+//     console.log("Unable to read directory.");
+//     console.log(error.message);
+// }
+
+
 const fs = require("fs");
 
 const directory = process.argv[2];
 console.log("Directory:", directory);
 
-
-try {
-    const files = fs.readdirSync(directory);
+fs.readdir(directory, (error, files)=>{
+    if(error){
+        console.log("Unable to read directory.");
+        console.log(error.message);
+        return;
+    }
     console.log("Files:", files);
-} catch (error) {
-    console.log("Unable to read directory.");
-    console.log(error.message);
-}
+});
+console.log("File analyzer ends.");
