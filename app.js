@@ -79,14 +79,28 @@ fs.readdir(directory, (error, files)=>{
         return readFile(filePath);
     });
 
-    Promise.all(promises)
-        .then((contents) => {
+    // Promise.all(promises)
+    //     .then((contents) => {
+    //         console.log("All files have been read.");
+    //         console.log(contents);
+    //     })
+    //     .catch((error) => {
+    //         console.log("Unable to read files.");
+    //         console.log(error.message);
+    //     });
+    // // adding modern async await to handle promises.
+
+    async function processFiles() {
+        try {
+            const contents = await Promise.all(promises);
             console.log("All files have been read.");
             console.log(contents);
-        })
-        .catch((error) => {
-            console.log("Unable to read files.");
+        } catch (error) {
+            console.log("Unable to read files");
             console.log(error.message);
-        });
+        }
+    }
+
+    processFiles();
 });
 console.log("File analyzer ends.");
