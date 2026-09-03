@@ -95,7 +95,9 @@ fs.readdir(directory, (error, files)=>{
             const contents = await Promise.all(promises);
             console.log("All files have been read.");
             //console.log(contents);
-            contents.forEach((content, index) => {
+            
+
+            const results = contents.map((content, index) => {
                 const lines = content.trim().split("\n");
                 const words = content.trim().split(/\s+/);
                 const characters = content.length;
@@ -103,12 +105,16 @@ fs.readdir(directory, (error, files)=>{
                     return line.length > longest.length ? line : longest;
                 });
 
-                console.log(`File ${index + 1}:`);
-                console.log("Lines:", lines.length);
-                console.log("Words:", words.length);
-                console.log("Characters:", characters);
-                console.log("Longest line:", longestLine);
+                return {
+                    file: files[index],
+                    lines: lines.length,
+                    words: words.length,
+                    characters: characters,
+                    longestLine: longestLine
+                };
             });
+            console.log("Analysis results:");
+            console.log(results);
         } catch (error) {
             console.log("Unable to read files");
             console.log(error.message);
