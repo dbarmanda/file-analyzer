@@ -99,11 +99,15 @@ fs.readdir(directory, (error, files)=>{
                 const lines = content.trim().split("\n");
                 const words = content.trim().split(/\s+/);
                 const characters = content.length;
+                const longestLine = lines.reduce((longest, line) => {
+                    return line.length > longest.length ? line : longest;
+                });
 
                 console.log(`File ${index + 1}:`);
                 console.log("Lines:", lines.length);
                 console.log("Words:", words.length);
                 console.log("Characters:", characters);
+                console.log("Longest line:", longestLine);
             });
         } catch (error) {
             console.log("Unable to read files");
