@@ -113,8 +113,25 @@ fs.readdir(directory, (error, files)=>{
                     longestLine: longestLine
                 };
             });
-            console.log("Analysis results:");
-            console.log(results);
+
+            const totalLines = results.reduce((total, result) => {
+                return total + result.lines;
+            }, 0);
+
+            const totlaWords = results.reduce((total, result) => {
+                return total + result.words;
+            }, 0);
+
+            const totalCharacters = results.reduce((total, result) => {
+                return total + result.characters;
+            }, 0);
+
+            // console.log("Analysis results:");
+            // console.log(results);
+            console.log("\nTotal:");
+            console.log("Lines:", totalLines);
+            console.log("Words:", totlaWords);
+            console.log("Characters:", totalCharacters);
         } catch (error) {
             console.log("Unable to read files");
             console.log(error.message);
