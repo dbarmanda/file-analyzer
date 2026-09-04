@@ -26,6 +26,8 @@ console.log("File analyzer started.");
 
 
 const fs = require("fs");
+const path = require("path");
+const { text } = require("stream/consumers");
 
 const directory = process.argv[2];
 console.log("Directory:", directory);
@@ -51,6 +53,10 @@ fs.readdir(directory, (error, files)=>{
         return;
     }
     console.log("Files:", files);
+    const textFiles = files.filter((file)=>{
+        return path.extname(file) == ".txt";
+    });
+    console.log("Text files:", textFiles);
 
     // //starts multiple async operations, but we currently have no wawy to know when all of them have finished
     // //comes Promises and Promise.all().
@@ -74,7 +80,7 @@ fs.readdir(directory, (error, files)=>{
     // // callbacks execute when their reads finish   => thus need promises.
     // });
 
-    const promises = files.map((file) => {
+    const promises = textFiles.map((file) => {
         const filePath = `${directory}/${file}`;
         return readFile(filePath);
     });
@@ -106,7 +112,7 @@ fs.readdir(directory, (error, files)=>{
                 });
 
                 return {
-                    file: files[index],
+                    file: textFiles[index],
                     lines: lines.length,
                     words: words.length,
                     characters: characters,
