@@ -1,1 +1,2 @@
 Hello from file two
+Let's add a newline to make a difference.
