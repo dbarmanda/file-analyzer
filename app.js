@@ -135,20 +135,35 @@ fs.readdir(directory, (error, files)=>{
                     return line.length > longest.length ? line : longest;
                 }, "");
 
+                const avgWordsPerLine = lines.length === 0
+                    ? 0
+                    : words.length / lines.length;
                 return {
                     file: matchingFiles[index],
                     lines: lines.length,
                     words: words.length,
                     characters: characters,
+                    averageWordsPerLine: avgWordsPerLine,
                     longestLine: longestLine
                 };
+            });
+
+            console.log("\nAnalysis results:");
+
+            results.forEach((result) => {
+                console.log(`\nFile: ${result.file}`);
+                console.log("Lines:", result.lines);
+                console.log("Words:", result.words);
+                console.log("Characters:", result.characters);
+                console.log("Average words per line:", result.averageWordsPerLine);
+                console.log("Longest line:", result.longestLine);
             });
 
             const totalLines = results.reduce((total, result) => {
                 return total + result.lines;
             }, 0);
 
-            const totlaWords = results.reduce((total, result) => {
+            const totalWords = results.reduce((total, result) => {
                 return total + result.words;
             }, 0);
 
@@ -160,7 +175,7 @@ fs.readdir(directory, (error, files)=>{
             // console.log(results);
             console.log("\nTotal:");
             console.log("Lines:", totalLines);
-            console.log("Words:", totlaWords);
+            console.log("Words:", totalWords);
             console.log("Characters:", totalCharacters);
 
             const largestFile = results.reduce((largest, result) => {
