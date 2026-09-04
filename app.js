@@ -1,6 +1,5 @@
-const fs = require("fs");
-const path = require("path");
 const analyzeContent = require("./src/analyzer");
+const readFiles = require("./src/file-reader");
 
 const directory = process.argv[2];
 const extension = process.argv[3];
@@ -14,108 +13,182 @@ console.log("File analyzer started.");
 console.log("Directory:", directory);
 console.log("Extension:", extension);
 
-function readFile(filePath){
-    return new Promise((resolve, reject) => {
-        fs.readFile(filePath, "utf8", (error, data) => {
-            if(error){
-                reject(error);
-                return;
-            }
-            resolve(data);
+async function processFiles() {
+    try {
+        const files = await readFiles(directory, extension);
+
+        if (files.length === 0) {
+            console.log(`No files found with extension: ${extension}`);
+            return;
+        }
+
+        console.log("Files:", files.map(file => file.file));
+
+        const results = files.map((file) => {
+            const analysis = analyzeContent(file.content);
+
+            return {
+                file: file.file,
+                ...analysis
+            };
         });
-    });
+
+        // existing reporting/aggregation code...
+        // console.log("\nAnalysis results:");
+
+        // results.forEach((result) => {
+        //     console.log(`\nFile: ${result.file}`);
+        //     console.log("Lines:", result.lines);
+        //     console.log("Words:", result.words);
+        //     console.log("Characters:", result.characters);
+        //     console.log("Average words per line:", result.averageWordsPerLine);
+        //     console.log("Longest line:", result.longestLine);
+        // });
+
+        // const totalLines = results.reduce((total, result) => {
+        //     return total + result.lines;
+        // }, 0);
+
+        // const totalWords = results.reduce((total, result) => {
+        //     return total + result.words;
+        // }, 0);
+
+        // const totalCharacters = results.reduce((total, result) => {
+        //     return total + result.characters;
+        // }, 0);
+
+        // // console.log("Analysis results:");
+        // // console.log(results);
+        // console.log("\nTotal:");
+        // console.log("Lines:", totalLines);
+        // console.log("Words:", totalWords);
+        // console.log("Characters:", totalCharacters);
+
+        // const largestFile = results.reduce((largest, result) => {
+        //     return result.characters > largest.characters ? result: largest;
+        // });
+        // console.log("\nLargest file:");
+        // console.log("File:", largestFile.file);
+        // console.log("Characters:", largestFile.characters);
+
+        // const sortedFiles = [...results].sort((a, b)=>{
+        //     return b.characters - a.characters;
+        // });
+        // console.log("\nFiles sorted by size: ");
+
+        // sortedFiles.forEach((result)=>{
+        //     console.log(`${result.file}: ${result.characters} characters`);
+        // });
+    }
+    catch (error) {
+        console.log("Unable to process files.");
+        console.log(error.message);
+    }
 }
 
-fs.readdir(directory, (error, files)=>{
-    if(error){
-        console.log("Unable to read directory.");
-        console.log(error.message);
-        return;
-    }
-    console.log("Files:", files);
+// function readFile(filePath){
+//     return new Promise((resolve, reject) => {
+//         fs.readFile(filePath, "utf8", (error, data) => {
+//             if(error){
+//                 reject(error);
+//                 return;
+//             }
+//             resolve(data);
+//         });
+//     });
+// }
 
-    const matchingFiles = files.filter((file)=>{
-        return path.extname(file) == extension;
-    });
+// fs.readdir(directory, (error, files)=>{
+//     if(error){
+//         console.log("Unable to read directory.");
+//         console.log(error.message);
+//         return;
+//     }
+//     console.log("Files:", files);
 
-    console.log("Matching files:", matchingFiles);
+//     const matchingFiles = files.filter((file)=>{
+//         return path.extname(file) == extension;
+//     });
 
-    if(matchingFiles.length == 0){
-        console.log(`No files found with extension: ${extension}`);
-        return;
-    }
+//     console.log("Matching files:", matchingFiles);
+
+//     if(matchingFiles.length == 0){
+//         console.log(`No files found with extension: ${extension}`);
+//         return;
+//     }
     
-    const promises = matchingFiles.map((file) => {
-        const filePath = `${directory}/${file}`;
-        return readFile(filePath);
-    });
+//     const promises = matchingFiles.map((file) => {
+//         const filePath = `${directory}/${file}`;
+//         return readFile(filePath);
+//     });
 
-    async function processFiles() {
-        try {
-            const contents = await Promise.all(promises);
-            console.log("All files have been read.");
-            //console.log(contents);
+//     async function processFiles() {
+//         try {
+//             const contents = await Promise.all(promises);
+//             console.log("All files have been read.");
+//             //console.log(contents);
             
 
-            const results = contents.map((content, index) => {
-                const analysis = analyzeContent(content);
-                return {
-                    file: matchingFiles[index],
-                    ...analysis
-                };
-            });
+//             const results = contents.map((content, index) => {
+//                 const analysis = analyzeContent(content);
+//                 return {
+//                     file: matchingFiles[index],
+//                     ...analysis
+//                 };
+//             });
 
-            console.log("\nAnalysis results:");
+//             console.log("\nAnalysis results:");
 
-            results.forEach((result) => {
-                console.log(`\nFile: ${result.file}`);
-                console.log("Lines:", result.lines);
-                console.log("Words:", result.words);
-                console.log("Characters:", result.characters);
-                console.log("Average words per line:", result.averageWordsPerLine);
-                console.log("Longest line:", result.longestLine);
-            });
+//             results.forEach((result) => {
+//                 console.log(`\nFile: ${result.file}`);
+//                 console.log("Lines:", result.lines);
+//                 console.log("Words:", result.words);
+//                 console.log("Characters:", result.characters);
+//                 console.log("Average words per line:", result.averageWordsPerLine);
+//                 console.log("Longest line:", result.longestLine);
+//             });
 
-            const totalLines = results.reduce((total, result) => {
-                return total + result.lines;
-            }, 0);
+//             const totalLines = results.reduce((total, result) => {
+//                 return total + result.lines;
+//             }, 0);
 
-            const totalWords = results.reduce((total, result) => {
-                return total + result.words;
-            }, 0);
+//             const totalWords = results.reduce((total, result) => {
+//                 return total + result.words;
+//             }, 0);
 
-            const totalCharacters = results.reduce((total, result) => {
-                return total + result.characters;
-            }, 0);
+//             const totalCharacters = results.reduce((total, result) => {
+//                 return total + result.characters;
+//             }, 0);
 
-            // console.log("Analysis results:");
-            // console.log(results);
-            console.log("\nTotal:");
-            console.log("Lines:", totalLines);
-            console.log("Words:", totalWords);
-            console.log("Characters:", totalCharacters);
+//             // console.log("Analysis results:");
+//             // console.log(results);
+//             console.log("\nTotal:");
+//             console.log("Lines:", totalLines);
+//             console.log("Words:", totalWords);
+//             console.log("Characters:", totalCharacters);
 
-            const largestFile = results.reduce((largest, result) => {
-                return result.characters > largest.characters ? result: largest;
-            });
-            console.log("\nLargest file:");
-            console.log("File:", largestFile.file);
-            console.log("Characters:", largestFile.characters);
+//             const largestFile = results.reduce((largest, result) => {
+//                 return result.characters > largest.characters ? result: largest;
+//             });
+//             console.log("\nLargest file:");
+//             console.log("File:", largestFile.file);
+//             console.log("Characters:", largestFile.characters);
 
-            const sortedFiles = [...results].sort((a, b)=>{
-                return b.characters - a.characters;
-            });
-            console.log("\nFiles sorted by size: ");
+//             const sortedFiles = [...results].sort((a, b)=>{
+//                 return b.characters - a.characters;
+//             });
+//             console.log("\nFiles sorted by size: ");
 
-            sortedFiles.forEach((result)=>{
-                console.log(`${result.file}: ${result.characters} characters`);
-            });
-        } catch (error) {
-            console.log("Unable to read files");
-            console.log(error.message);
-        }
-    }
+//             sortedFiles.forEach((result)=>{
+//                 console.log(`${result.file}: ${result.characters} characters`);
+//             });
+//         } catch (error) {
+//             console.log("Unable to read files");
+//             console.log(error.message);
+//         }
+//     }
 
-    processFiles();
-});
+//     processFiles();
+// });
+processFiles();
 console.log("File analyzer ends.");
