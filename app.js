@@ -122,12 +122,18 @@ fs.readdir(directory, (error, files)=>{
             
 
             const results = contents.map((content, index) => {
-                const lines = content.trim().split("\n");
-                const words = content.trim().split(/\s+/);
+                //For empty file returns 1 for each
+                // const lines = content.trim().split("\n");
+                // const words = content.trim().split(/\s+/);
+
+                const trimmedContent = content.trim();
+                const lines = trimmedContent === "" ? [] : trimmedContent.split("\n");
+                const words = trimmedContent === "" ? [] : trimmedContent.split(/\s+/);
+
                 const characters = content.length;
                 const longestLine = lines.reduce((longest, line) => {
                     return line.length > longest.length ? line : longest;
-                });
+                }, "");
 
                 return {
                     file: matchingFiles[index],
