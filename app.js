@@ -30,7 +30,9 @@ const path = require("path");
 const { text } = require("stream/consumers");
 
 const directory = process.argv[2];
+const extension = process.argv[3];
 console.log("Directory:", directory);
+console.log("Extension:", extension);
 
 //doesn't directly return the file contents.
 //returns promise:
@@ -54,7 +56,7 @@ fs.readdir(directory, (error, files)=>{
     }
     console.log("Files:", files);
     const textFiles = files.filter((file)=>{
-        return path.extname(file) == ".txt";
+        return path.extname(file) == extension;
     });
     console.log("Text files:", textFiles);
 
