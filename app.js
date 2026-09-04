@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const { text } = require("stream/consumers");
+const analyzeContent = require("./src/analyzer");
 
 const directory = process.argv[2];
 const extension = process.argv[3];
@@ -58,29 +58,10 @@ fs.readdir(directory, (error, files)=>{
             
 
             const results = contents.map((content, index) => {
-                //For empty file returns 1 for each
-                // const lines = content.trim().split("\n");
-                // const words = content.trim().split(/\s+/);
-
-                const trimmedContent = content.trim();
-                const lines = trimmedContent === "" ? [] : trimmedContent.split("\n");
-                const words = trimmedContent === "" ? [] : trimmedContent.split(/\s+/);
-
-                const characters = content.length;
-                const longestLine = lines.reduce((longest, line) => {
-                    return line.length > longest.length ? line : longest;
-                }, "");
-
-                const avgWordsPerLine = lines.length === 0
-                    ? 0
-                    : words.length / lines.length;
+                const analysis = analyzeContent(content);
                 return {
                     file: matchingFiles[index],
-                    lines: lines.length,
-                    words: words.length,
-                    characters: characters,
-                    averageWordsPerLine: avgWordsPerLine,
-                    longestLine: longestLine
+                    ...analysis
                 };
             });
 
