@@ -1,4 +1,4 @@
-console.log("File analyzer started.");
+
 
 
 //1. What is process, arg vector(CLI)?
@@ -31,8 +31,16 @@ const { text } = require("stream/consumers");
 
 const directory = process.argv[2];
 const extension = process.argv[3];
+
+if(!directory || !extension){
+    console.log("Usage: node app.js <directory> <extension>");
+    process.exit(1);
+}
+console.log("File analyzer started.");
+
 console.log("Directory:", directory);
 console.log("Extension:", extension);
+
 
 //doesn't directly return the file contents.
 //returns promise:
