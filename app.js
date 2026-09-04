@@ -63,13 +63,14 @@ fs.readdir(directory, (error, files)=>{
         return;
     }
     console.log("Files:", files);
-    const textFiles = files.filter((file)=>{
+
+    const matchingFiles = files.filter((file)=>{
         return path.extname(file) == extension;
     });
 
-    console.log("Text files:", textFiles);
+    console.log("Matching files:", matchingFiles);
 
-    if(textFiles.length == 0){
+    if(matchingFiles.length == 0){
         console.log(`No files found with extension: ${extension}`);
         return;
     }
@@ -97,7 +98,7 @@ fs.readdir(directory, (error, files)=>{
     // // callbacks execute when their reads finish   => thus need promises.
     // });
 
-    const promises = textFiles.map((file) => {
+    const promises = matchingFiles.map((file) => {
         const filePath = `${directory}/${file}`;
         return readFile(filePath);
     });
@@ -129,7 +130,7 @@ fs.readdir(directory, (error, files)=>{
                 });
 
                 return {
-                    file: textFiles[index],
+                    file: matchingFiles[index],
                     lines: lines.length,
                     words: words.length,
                     characters: characters,
