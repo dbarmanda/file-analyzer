@@ -66,7 +66,14 @@ fs.readdir(directory, (error, files)=>{
     const textFiles = files.filter((file)=>{
         return path.extname(file) == extension;
     });
+
     console.log("Text files:", textFiles);
+
+    if(textFiles.length == 0){
+        console.log(`No files found with extension: ${extension}`);
+        return;
+    }
+    
 
     // //starts multiple async operations, but we currently have no wawy to know when all of them have finished
     // //comes Promises and Promise.all().
