@@ -1,0 +1,5 @@
+2026-09-04 11:00:01 INFO Debug mode enabled
+2026-09-04 11:00:02 INFO Request received
+2026-09-04 11:00:03 INFO Request headers inspected
+2026-09-04 11:00:04 WARN Missing optional header
+2026-09-04 11:00:05 INFO Request processing completed

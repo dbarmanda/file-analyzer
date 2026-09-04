@@ -5,27 +5,27 @@ function analyzeContent(content){
         ? []
         : trimmedContent.split("\n");
 
-    const words = trimmedContent === ""
-        ? []
-        : trimmedContent.split(/\s+/);
-    
-    const characters = content.length;
+    let errorLines = 0;
+    let warnLines = 0;
+    let infoLines = 0;
 
-    const longestLine = lines.reduce((longest, line) => {
-        return line.length > longest.length ? line : longest;
-    }, "");
-
-    const averageWordsPerLine = lines.length === 0
-        ? 0
-        : words.length / lines.length;
+    for(const line of lines){
+        if(line.includes("ERROR")){
+            errorLines++;
+        } else if(line.includes("WARN")){
+            warnLines++;
+        } else if(line.includes("INFO")){
+            infoLines++;
+        }
+    }
 
     return {
         lines: lines.length,
-        words: words.length,
-        characters: characters,
-        averageWordsPerLine: averageWordsPerLine,
-        longestLine: longestLine
-    };
+        errorLines: errorLines,
+        warnLines: warnLines,
+        infoLines: infoLines,
+        characters: content.length
+    }
 }
 
 module.exports = analyzeContent;

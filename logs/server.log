@@ -1,0 +1,7 @@
+2026-09-04 08:00:00 INFO Server started
+2026-09-04 08:00:01 INFO Listening on port 3000
+2026-09-04 08:05:12 INFO Request received
+2026-09-04 08:05:15 INFO Request completed
+2026-09-04 08:10:21 WARN High memory usage
+2026-09-04 08:11:03 INFO Memory usage normalized
+2026-09-04 08:20:45 ERROR Request processing failed

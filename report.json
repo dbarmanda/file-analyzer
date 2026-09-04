@@ -1,0 +1,12 @@
+{
+  "filesProcessed": 4,
+  "totalLines": 22,
+  "totalErrors": 5,
+  "totalWarnings": 4,
+  "totalInfo": 13,
+  "totalCharacters": 1084,
+  "largestFile": {
+    "file": "server.log",
+    "characters": 322
+  }
+}

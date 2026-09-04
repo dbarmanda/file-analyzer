@@ -1,0 +1,4 @@
+2026-09-04 09:10:12 ERROR Database connection failed
+2026-09-04 09:11:05 ERROR Database connection retry failed
+2026-09-04 09:15:44 WARN Database response is slow
+2026-09-04 09:20:01 ERROR Request failed with status 500
