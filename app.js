@@ -1,5 +1,5 @@
-const analyzeContent = require("./src/analyzer");
 const readFiles = require("./src/file-reader");
+const analyzeFile = require("./src/stream-analyzer");
 const aggregateResults = require("./src/aggregator");
 const {
     printReport,
@@ -28,22 +28,32 @@ async function processFiles() {
             return;
         }
 
-        console.log("Files:", files.map(file => file.file));
+        //Old
+        //console.log("Files:", files.map(file => file.file));
+        //<--New
+        console.log("Files:", files);
 
-        const results = files.map((file) => {
-            const analysis = analyzeContent(file.content);
+        //old fs.readFile().....
+        // const results = files.map((file) => {
+        //     const analysis = analyzeContent(file.content);
 
-            return {
-                file: file.file,
-                ...analysis
-            };
-        });
+        //     return {
+        //         file: file.file,
+        //         ...analysis
+        //     };
+        // });
         
+        //wait untill all 4 file analyses have completed.
+        const results = await Promise.all(
+            files.map(file => analyzeFile(file))
+        );
+
         const summary = aggregateResults(results);
         
         printReport(summary);
         writeJsonReport(summary);
         
+        console.log("File analyzer ends.");
     }
     catch (error) {
         console.log("Unable to process files.");
@@ -52,5 +62,4 @@ async function processFiles() {
 }
 
 processFiles();
-console.log("File analyzer ends.");
 
